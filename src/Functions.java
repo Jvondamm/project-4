@@ -16,7 +16,6 @@ public final class Functions
     public static final String ORE_ID_PREFIX = "ore -- ";
     public static final int ORE_CORRUPT_MIN = 20000;
     public static final int ORE_CORRUPT_MAX = 30000;
-    //public static final int ORE_REACH = 1;
 
     public static final String QUAKE_KEY = "quake";
     public static final String QUAKE_ID = "quake";
@@ -26,9 +25,6 @@ public final class Functions
 
     public static final int COLOR_MASK = 0xffffff;
     public static final int KEYED_IMAGE_MIN = 5;
-    //private static final int KEYED_RED_IDX = 2;
-    //private static final int KEYED_GREEN_IDX = 3;
-    //private static final int KEYED_BLUE_IDX = 4;
 
     public static final int PROPERTY_KEY = 0;
 
@@ -236,9 +232,5 @@ public final class Functions
             }
             return false;
         }
-    }
-
-    public static int clamp(int value, int low, int high) {
-        return Math.min(high, Math.max(value, low));
     }
 }

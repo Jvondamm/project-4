@@ -21,10 +21,6 @@ public final class ImageStore
         return imageStore.images.getOrDefault(key, imageStore.defaultImages);
     }
 
-    /**
-     * stuff
-     * */
-
     public static void loadImages(
             Scanner in, ImageStore imageStore, PApplet screen)
     {
@@ -95,5 +91,16 @@ public final class ImageStore
             Entity entity, WorldModel world, ImageStore imageStore)
     {
         return new Action(ActionKind.ACTIVITY, entity, world, imageStore, 0);
+    }
+
+    public static Optional<PImage> getBackgroundImage(
+            WorldModel world, Point pos)
+    {
+        if (WorldModel.withinBounds(world, pos)) {
+            return Optional.of(Functions.getCurrentImage(WorldModel.getBackgroundCell(world, pos)));
+        }
+        else {
+            return Optional.empty();
+        }
     }
 }

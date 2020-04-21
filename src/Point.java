@@ -8,7 +8,7 @@ public final class Point
 {
     public final int x;
     public final int y;
-    public static final int ORE_REACH = 1;
+    private static final int ORE_REACH = 1;
 
     public Point(int x, int y) {
         this.x = x;
@@ -56,17 +56,6 @@ public final class Point
         }
 
         return nearestEntity(ofType, pos);
-    }
-
-    public static Optional<PImage> getBackgroundImage(
-            WorldModel world, Point pos)
-    {
-        if (WorldModel.withinBounds(world, pos)) {
-            return Optional.of(Functions.getCurrentImage(WorldModel.getBackgroundCell(world, pos)));
-        }
-        else {
-            return Optional.empty();
-        }
     }
 
     public String toString() {
