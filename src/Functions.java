@@ -208,7 +208,7 @@ public final class Functions
                       entity.actionPeriod);
     }
 
-    public static boolean moveToOreBlob(
+    private static boolean moveToOreBlob(
             Entity blob,
             WorldModel world,
             Entity target,

@@ -44,7 +44,7 @@ public final class WorldModel
         }
     }
 
-    public static boolean processLine(
+    private static boolean processLine(
             String line, WorldModel world, ImageStore imageStore)
     {
         String[] properties = line.split("\\s");
@@ -68,7 +68,7 @@ public final class WorldModel
         return false;
     }
 
-    public static boolean parseBackground(
+    private static boolean parseBackground(
             String[] properties, WorldModel world, ImageStore imageStore)
     {
         if (properties.length == Functions.BGND_NUM_PROPERTIES) {
@@ -82,7 +82,7 @@ public final class WorldModel
         return properties.length == Functions.BGND_NUM_PROPERTIES;
     }
 
-    public static boolean parseMiner(
+    private static boolean parseMiner(
             String[] properties, WorldModel world, ImageStore imageStore)
     {
         if (properties.length == Functions.MINER_NUM_PROPERTIES) {
@@ -102,7 +102,7 @@ public final class WorldModel
         return properties.length == Functions.MINER_NUM_PROPERTIES;
     }
 
-    public static boolean parseObstacle(
+    private static boolean parseObstacle(
             String[] properties, WorldModel world, ImageStore imageStore)
     {
         if (properties.length == Functions.OBSTACLE_NUM_PROPERTIES) {
@@ -117,7 +117,7 @@ public final class WorldModel
         return properties.length == Functions.OBSTACLE_NUM_PROPERTIES;
     }
 
-    public static boolean parseOre(
+    private static boolean parseOre(
             String[] properties, WorldModel world, ImageStore imageStore)
     {
         if (properties.length == Functions.ORE_NUM_PROPERTIES) {
@@ -132,7 +132,7 @@ public final class WorldModel
         return properties.length == Functions.ORE_NUM_PROPERTIES;
     }
 
-    public static boolean parseSmith(
+    private static boolean parseSmith(
             String[] properties, WorldModel world, ImageStore imageStore)
     {
         if (properties.length == Functions.SMITH_NUM_PROPERTIES) {
@@ -147,7 +147,7 @@ public final class WorldModel
         return properties.length == Functions.SMITH_NUM_PROPERTIES;
     }
 
-    public static boolean parseVein(
+    private static boolean parseVein(
             String[] properties, WorldModel world, ImageStore imageStore)
     {
         if (properties.length == Functions.VEIN_NUM_PROPERTIES) {
@@ -163,7 +163,7 @@ public final class WorldModel
         return properties.length == Functions.VEIN_NUM_PROPERTIES;
     }
 
-    public static void tryAddEntity(WorldModel world, Entity entity) {
+    private static void tryAddEntity(WorldModel world, Entity entity) {
         if (isOccupied(world, entity.position)) {
             // arguably the wrong type of exception, but we are not
             // defining our own exceptions yet
@@ -182,7 +182,7 @@ public final class WorldModel
         return withinBounds(world, pos) && getOccupancyCell(world, pos) != null;
     }
 
-    public static void setBackground(
+    private static void setBackground(
             WorldModel world, Point pos, Background background)
     {
         if (withinBounds(world, pos)) {

@@ -105,7 +105,7 @@ public final class EventScheduler
         }
     }
 
-    public static void removePendingEvent(
+    private static void removePendingEvent(
             EventScheduler scheduler, Event event)
     {
         List<Event> pending = scheduler.pendingEvents.get(event.entity);

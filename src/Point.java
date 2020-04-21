@@ -15,7 +15,7 @@ public final class Point
         this.y = y;
     }
 
-    public static Optional<Entity> nearestEntity(
+    private static Optional<Entity> nearestEntity(
             List<Entity> entities, Point pos)
     {
         if (entities.isEmpty()) {
@@ -38,7 +38,7 @@ public final class Point
         }
     }
 
-    public static int distanceSquared(Point p1, Point p2) {
+    private static int distanceSquared(Point p1, Point p2) {
         int deltaX = p1.x - p2.x;
         int deltaY = p1.y - p2.y;
 

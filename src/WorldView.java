@@ -35,7 +35,7 @@ public final class WorldView
         Viewport.shift(view.viewport, newCol, newRow);
     }
 
-    public static void drawBackground(WorldView view) {
+    private static void drawBackground(WorldView view) {
         for (int row = 0; row < view.viewport.numRows; row++) {
             for (int col = 0; col < view.viewport.numCols; col++) {
                 Point worldPoint = Viewport.viewportToWorld(view.viewport, col, row);
@@ -49,7 +49,7 @@ public final class WorldView
         }
     }
 
-    public static void drawEntities(WorldView view) {
+    private static void drawEntities(WorldView view) {
         for (Entity entity : view.world.entities) {
             Point pos = entity.position;
 
@@ -67,7 +67,7 @@ public final class WorldView
         drawEntities(view);
     }
 
-    public static int clamp(int value, int low, int high) {
+    private static int clamp(int value, int low, int high) {
         return Math.min(high, Math.max(value, low));
     }
 

@@ -35,7 +35,7 @@ public final class Event
         removeEntityAt(world, entity.position);
     }
 
-    public static void removeEntityAt(WorldModel world, Point pos) {
+    private static void removeEntityAt(WorldModel world, Point pos) {
         if (WorldModel.withinBounds(world, pos) && WorldModel.getOccupancyCell(world, pos) != null) {
             Entity entity = WorldModel.getOccupancyCell(world, pos);
 
