@@ -71,7 +71,7 @@ public final class Functions
     public static final int VEIN_COL = 2;
     public static final int VEIN_ROW = 3;
     public static final int VEIN_ACTION_PERIOD = 4;
-
+    // stuff
     public static Entity createMinerFull(
             String id,
             int resourceLimit,
