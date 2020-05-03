@@ -1,10 +1,45 @@
 Reasons For Unmoved Methods
 
-getCurrentImage
-    Because it was too ambiguous to where it should go.
-    While it could have fit into ImageStore or Entity, it did not fit with the other functions
-    and would be better if it was left in the general FUnctions.java file.
+createMinerFull
+createMinerNotFull
+createObstacle
+createOre
+createOreBlob
+createQuake
+createVein
+createBlacksmith
+    I did not move these per our instructions Friday. I think they should remain in 
+    Functions because although they are entities, the entities are just being instantiated,
+    and don't deal with any methods in Entity itself.
 
+moveOreToBLob
+    This method could have been moved to Entity, WorldModel, or EventScheduler.
+    I did not move it to Entity because it contained two entities, and its style didn't
+    fit in either WorldModel or EventScheduler.
+
+loadImages
+process ImageLine
+setAlpha
+getImages
+    These methods I also did not move, because they take in variables not specific to a class
+
+parseMiner
+parseObstacle
+parseOre
+parseSmith
+parseVein
+    I did not move the parse methods firstly because of their large amount of final final variables,
+   and secondly because they don't rely on one method, but equally use Worldmodel and ImageStore
+
+processLine
+    I did not move this simply because it falls into the same reasons as the above methods
+
+Load
+    I followed the hint on piazza and left this method here, but it would also not fit well in either WorldModel
+    or ImageStore, as it does not reference any methods in either class.
+
+
+Reasons For Moving Ambiguous Methods
 
 executeMinerFullActivity
 executeMinerNotFullActivity
@@ -12,19 +47,12 @@ executeOreActivity
 executeOreBlobActivity
 executeQuakeActivity
 executeVeinActivity
-    For all these methods, I did not move them as a group for several reasons.
-    First, of the best files they could be moved to, Entity, WorldModel, and EventScheduler,
-    those files already held a large number of methods, and it was not clear which file would be better.
-    Second, each method used a lot of final ints, and I thought it better to keep most of the final ints in one file for readability.
+    Of the best files they could be moved to, Entity, WorldModel, and EventScheduler,
+    I chose Entity because the code in each method controls the entities' movements,
+    their schedulings, and more. 
 
-moveOreToBLob
-    This method could have been moved to Entity, WorldModel, or EventScheduler.
-    I did not move it to Entity because it contained two entities, and its style didn't
-    fit in either WorldModel or EventScheduler.
-
-
-
-Reasons For Moving Ambiguous Methods
+getCurrentImage
+    I was able to split this up per your lab instructions into both Background and Entity.
 
 nextPositionMiner
 nextPositionOreBLob
@@ -34,11 +62,3 @@ nextPositionOreBLob
 
 adjacent
     I chose to put the adjacent method into the Point class because it deals heavily with Point class attributes.
-
-parseMiner
-parseObstacle
-parseOre
-parseSmith
-parseVein
-    For these methods, they primarily used ImageStore, yet I put them in WorldModel. This is because they create the, well,
-    visual model of the game, so it made more sense for these higher-level methods to be put in that file.

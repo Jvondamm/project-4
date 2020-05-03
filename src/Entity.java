@@ -36,80 +36,202 @@ public final class Entity
         this.animationPeriod = animationPeriod;
     }
 
+    public static PImage getCurrentImage(Object entity) {
+        if (entity instanceof Entity) {
+            return ((Entity)entity).images.get(((Entity)entity).imageIndex);
+        }
+        else {
+            throw new UnsupportedOperationException(
+                    String.format("getCurrentImage not supported for %s",
+                            entity));
+        }
+    }
+
     public static Action createAnimationAction(Entity entity, int repeatCount) {
         return new Action(ActionKind.ANIMATION, entity, null, null,
                           repeatCount);
     }
 
-    public static Entity createMinerFull(
-            String id,
-            int resourceLimit,
-            Point position,
-            int actionPeriod,
-            int animationPeriod,
-            List<PImage> images)
+    public static void scheduleActions(
+            Entity entity,
+            EventScheduler scheduler,
+            WorldModel world,
+            ImageStore imageStore)
     {
-        return new Entity(EntityKind.MINER_FULL, id, position, images,
-                          resourceLimit, resourceLimit, actionPeriod,
-                          animationPeriod);
+        switch (entity.kind) {
+            case MINER_FULL:
+                EventScheduler.scheduleEvent(scheduler, entity,
+                        ImageStore.createActivityAction(entity, world, imageStore),
+                        entity.actionPeriod);
+                EventScheduler.scheduleEvent(scheduler, entity,
+                        createAnimationAction(entity, 0),
+                        entity.getAnimationPeriod());
+                break;
+
+            case MINER_NOT_FULL:
+                EventScheduler.scheduleEvent(scheduler, entity,
+                        ImageStore.createActivityAction(entity, world, imageStore),
+                        entity.actionPeriod);
+                EventScheduler.scheduleEvent(scheduler, entity,
+                        createAnimationAction(entity, 0),
+                        entity.getAnimationPeriod());
+                break;
+
+            case ORE:
+                EventScheduler.scheduleEvent(scheduler, entity,
+                        ImageStore.createActivityAction(entity, world, imageStore),
+                        entity.actionPeriod);
+                break;
+
+            case ORE_BLOB:
+                EventScheduler.scheduleEvent(scheduler, entity,
+                        ImageStore.createActivityAction(entity, world, imageStore),
+                        entity.actionPeriod);
+                EventScheduler.scheduleEvent(scheduler, entity,
+                        createAnimationAction(entity, 0),
+                        entity.getAnimationPeriod());
+                break;
+
+            case QUAKE:
+                EventScheduler.scheduleEvent(scheduler, entity,
+                        ImageStore.createActivityAction(entity, world, imageStore),
+                        entity.actionPeriod);
+                EventScheduler.scheduleEvent(scheduler, entity, createAnimationAction(entity,
+                        Functions.QUAKE_ANIMATION_REPEAT_COUNT),
+                        entity.getAnimationPeriod());
+                break;
+
+            case VEIN:
+                EventScheduler.scheduleEvent(scheduler, entity,
+                        ImageStore.createActivityAction(entity, world, imageStore),
+                        entity.actionPeriod);
+                break;
+
+            default:
+        }
     }
 
-    public static Entity createMinerNotFull(
-            String id,
-            int resourceLimit,
-            Point position,
-            int actionPeriod,
-            int animationPeriod,
-            List<PImage> images)
+    public static void executeMinerFullActivity(
+            Entity entity,
+            WorldModel world,
+            ImageStore imageStore,
+            EventScheduler scheduler)
     {
-        return new Entity(EntityKind.MINER_NOT_FULL, id, position, images,
-                          resourceLimit, 0, actionPeriod, animationPeriod);
+        Optional<Entity> fullTarget =
+                Point.findNearest(world, entity.position, EntityKind.BLACKSMITH);
+
+        if (fullTarget.isPresent() && entity.moveToFull(world,
+                                                 fullTarget.get(), scheduler))
+        {
+            entity.transformFull(world, scheduler, imageStore);
+        }
+        else {
+            EventScheduler.scheduleEvent(scheduler, entity,
+                          ImageStore.createActivityAction(entity, world, imageStore),
+                          entity.actionPeriod);
+        }
     }
 
-    public static Entity createObstacle(
-            String id, Point position, List<PImage> images)
+    public static void executeMinerNotFullActivity(
+            Entity entity,
+            WorldModel world,
+            ImageStore imageStore,
+            EventScheduler scheduler)
     {
-        return new Entity(EntityKind.OBSTACLE, id, position, images, 0, 0, 0,
-                          0);
+        Optional<Entity> notFullTarget =
+                Point.findNearest(world, entity.position, EntityKind.ORE);
+
+        if (!notFullTarget.isPresent() || !entity.moveToNotFull(world,
+                                                         notFullTarget.get(),
+                                                         scheduler)
+                || !entity.transformNotFull(world, scheduler, imageStore))
+        {
+            EventScheduler.scheduleEvent(scheduler, entity,
+                          ImageStore.createActivityAction(entity, world, imageStore),
+                          entity.actionPeriod);
+        }
     }
 
-    public static Entity createOre(
-            String id, Point position, int actionPeriod, List<PImage> images)
+    public static void executeOreActivity(
+            Entity entity,
+            WorldModel world,
+            ImageStore imageStore,
+            EventScheduler scheduler)
     {
-        return new Entity(EntityKind.ORE, id, position, images, 0, 0,
-                          actionPeriod, 0);
+        Point pos = entity.position;
+
+        Event.removeEntity(world, entity);
+        EventScheduler.unscheduleAllEvents(scheduler, entity);
+
+        Entity blob = Functions.createOreBlob(entity.id + Functions.BLOB_ID_SUFFIX, pos,
+                                    entity.actionPeriod / Functions.BLOB_PERIOD_SCALE,
+                                    Functions.BLOB_ANIMATION_MIN + Functions.rand.nextInt(
+                                            Functions.BLOB_ANIMATION_MAX
+                                                    - Functions.BLOB_ANIMATION_MIN),
+                                    ImageStore.getImageList(imageStore, Functions.BLOB_KEY));
+
+        WorldModel.addEntity(world, blob);
+        scheduleActions(blob, scheduler, world, imageStore);
     }
 
-    public static Entity createOreBlob(
-            String id,
-            Point position,
-            int actionPeriod,
-            int animationPeriod,
-            List<PImage> images)
+    public static void executeOreBlobActivity(
+            Entity entity,
+            WorldModel world,
+            ImageStore imageStore,
+            EventScheduler scheduler)
     {
-        return new Entity(EntityKind.ORE_BLOB, id, position, images, 0, 0,
-                          actionPeriod, animationPeriod);
+        Optional<Entity> blobTarget =
+                Point.findNearest(world, entity.position, EntityKind.VEIN);
+        long nextPeriod = entity.actionPeriod;
+
+        if (blobTarget.isPresent()) {
+            Point tgtPos = blobTarget.get().position;
+
+            if (Functions.moveToOreBlob(entity, world, blobTarget.get(), scheduler)) {
+                Entity quake = Functions.createQuake(tgtPos,
+                                           ImageStore.getImageList(imageStore, Functions.QUAKE_KEY));
+
+                WorldModel.addEntity(world, quake);
+                nextPeriod += entity.actionPeriod;
+                scheduleActions(quake, scheduler, world, imageStore);
+            }
+        }
+
+        EventScheduler.scheduleEvent(scheduler, entity,
+                      ImageStore.createActivityAction(entity, world, imageStore),
+                      nextPeriod);
     }
 
-    public static Entity createQuake(
-            Point position, List<PImage> images)
+    public static void executeQuakeActivity(
+            Entity entity,
+            WorldModel world,
+            ImageStore imageStore,
+            EventScheduler scheduler)
     {
-        return new Entity(EntityKind.QUAKE, Functions.QUAKE_ID, position, images, 0, 0,
-                          Functions.QUAKE_ACTION_PERIOD, Functions.QUAKE_ANIMATION_PERIOD);
+        EventScheduler.unscheduleAllEvents(scheduler, entity);
+        Event.removeEntity(world, entity);
     }
 
-    public static Entity createVein(
-            String id, Point position, int actionPeriod, List<PImage> images)
+    public static void executeVeinActivity(
+            Entity entity,
+            WorldModel world,
+            ImageStore imageStore,
+            EventScheduler scheduler)
     {
-        return new Entity(EntityKind.VEIN, id, position, images, 0, 0,
-                          actionPeriod, 0);
-    }
+        Optional<Point> openPt = entity.position.findOpenAround(world);
 
-    public static Entity createBlacksmith(
-            String id, Point position, List<PImage> images)
-    {
-        return new Entity(EntityKind.BLACKSMITH, id, position, images, 0, 0, 0,
-                          0);
+        if (openPt.isPresent()) {
+            Entity ore = Functions.createOre(Functions.ORE_ID_PREFIX + entity.id, openPt.get(),
+                                   Functions.ORE_CORRUPT_MIN + Functions.rand.nextInt(
+                                           Functions.ORE_CORRUPT_MAX - Functions.ORE_CORRUPT_MIN),
+                                   ImageStore.getImageList(imageStore, Functions.ORE_KEY));
+            WorldModel.addEntity(world, ore);
+            scheduleActions(ore, scheduler, world, imageStore);
+        }
+
+        EventScheduler.scheduleEvent(scheduler, entity,
+                      ImageStore.createActivityAction(entity, world, imageStore),
+                      entity.actionPeriod);
     }
 
     public int getAnimationPeriod() {
@@ -125,6 +247,7 @@ public final class Entity
                                 kind));
         }
     }
+
     public void nextImage() {
         imageIndex = (imageIndex + 1) % images.size();
     }
@@ -135,7 +258,7 @@ public final class Entity
             ImageStore imageStore)
     {
         if (resourceCount >= resourceLimit) {
-            Entity miner = createMinerFull(id, resourceLimit,
+            Entity miner = Functions.createMinerFull(id, resourceLimit,
                     position, actionPeriod,
                     animationPeriod,
                     images);
@@ -143,8 +266,8 @@ public final class Entity
             Event.removeEntity(world, this);
             EventScheduler.unscheduleAllEvents(scheduler, this);
 
-            Event.addEntity(world, miner);
-            EventScheduler.scheduleActions(miner, scheduler, world, imageStore);
+            WorldModel.addEntity(world, miner);
+            scheduleActions(miner, scheduler, world, imageStore);
 
             return true;
         }
@@ -157,7 +280,7 @@ public final class Entity
             EventScheduler scheduler,
             ImageStore imageStore)
     {
-        Entity miner = createMinerNotFull(id, resourceLimit,
+        Entity miner = Functions.createMinerNotFull(id, resourceLimit,
                 position, actionPeriod,
                 animationPeriod,
                 images);
@@ -165,8 +288,8 @@ public final class Entity
         Event.removeEntity(world, this);
         EventScheduler.unscheduleAllEvents(scheduler, this);
 
-        Event.addEntity(world, miner);
-        EventScheduler.scheduleActions(miner, scheduler, world, imageStore);
+        WorldModel.addEntity(world, miner);
+        scheduleActions(miner, scheduler, world, imageStore);
     }
 
     public boolean moveToNotFull(

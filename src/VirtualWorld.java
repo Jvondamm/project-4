@@ -121,7 +121,7 @@ public final class VirtualWorld extends PApplet
     {
         try {
             Scanner in = new Scanner(new File(filename));
-            ImageStore.loadImages(in, imageStore, screen);
+            Functions.loadImages(in, imageStore, screen);
         }
         catch (FileNotFoundException e) {
             System.err.println(e.getMessage());
@@ -133,7 +133,7 @@ public final class VirtualWorld extends PApplet
     {
         try {
             Scanner in = new Scanner(new File(filename));
-            WorldModel.load(in, world, imageStore);
+            Functions.load(in, world, imageStore);
         }
         catch (FileNotFoundException e) {
             System.err.println(e.getMessage());
@@ -144,7 +144,7 @@ public final class VirtualWorld extends PApplet
             WorldModel world, EventScheduler scheduler, ImageStore imageStore)
     {
         for (Entity entity : world.entities) {
-            EventScheduler.scheduleActions(entity, scheduler, world, imageStore);
+            Entity.scheduleActions(entity, scheduler, world, imageStore);
         }
     }
 

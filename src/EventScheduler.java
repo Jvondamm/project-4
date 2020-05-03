@@ -15,64 +15,6 @@ public final class EventScheduler
         this.pendingEvents = new HashMap<>();
         this.timeScale = timeScale;
     }
-    public static void scheduleActions(
-            Entity entity,
-            EventScheduler scheduler,
-            WorldModel world,
-            ImageStore imageStore)
-    {
-        switch (entity.kind) {
-            case MINER_FULL:
-                scheduleEvent(scheduler, entity,
-                        ImageStore.createActivityAction(entity, world, imageStore),
-                        entity.actionPeriod);
-                scheduleEvent(scheduler, entity,
-                        Entity.createAnimationAction(entity, 0),
-                        entity.getAnimationPeriod());
-                break;
-
-            case MINER_NOT_FULL:
-                scheduleEvent(scheduler, entity,
-                        ImageStore.createActivityAction(entity, world, imageStore),
-                        entity.actionPeriod);
-                scheduleEvent(scheduler, entity,
-                        Entity.createAnimationAction(entity, 0),
-                        entity.getAnimationPeriod());
-                break;
-
-            case ORE:
-                scheduleEvent(scheduler, entity,
-                        ImageStore.createActivityAction(entity, world, imageStore),
-                        entity.actionPeriod);
-                break;
-
-            case ORE_BLOB:
-                scheduleEvent(scheduler, entity,
-                        ImageStore.createActivityAction(entity, world, imageStore),
-                        entity.actionPeriod);
-                scheduleEvent(scheduler, entity,
-                        Entity.createAnimationAction(entity, 0),
-                        entity.getAnimationPeriod());
-                break;
-
-            case QUAKE:
-                scheduleEvent(scheduler, entity,
-                        ImageStore.createActivityAction(entity, world, imageStore),
-                        entity.actionPeriod);
-                scheduleEvent(scheduler, entity, Entity.createAnimationAction(entity,
-                        Functions.QUAKE_ANIMATION_REPEAT_COUNT),
-                        entity.getAnimationPeriod());
-                break;
-
-            case VEIN:
-                scheduleEvent(scheduler, entity,
-                        ImageStore.createActivityAction(entity, world, imageStore),
-                        entity.actionPeriod);
-                break;
-
-            default:
-        }
-    }
 
     public static void scheduleEvent(
             EventScheduler scheduler,

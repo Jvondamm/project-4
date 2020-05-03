@@ -10,17 +10,6 @@ public final class Event
         this.entity = entity;
     }
 
-    /*
-       Assumes that there is no entity currently occupying the
-       intended destination cell.
-    */
-    public static void addEntity(WorldModel world, Entity entity) {
-        if (WorldModel.withinBounds(world, entity.position)) {
-            WorldModel.setOccupancyCell(world, entity.position, entity);
-            world.entities.add(entity);
-        }
-    }
-
     public static void moveEntity(WorldModel world, Entity entity, Point pos) {
         Point oldPos = entity.position;
         if (WorldModel.withinBounds(world, pos) && !pos.equals(oldPos)) {

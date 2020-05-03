@@ -23,7 +23,7 @@ public final class Action
     public void executeAction(Action action, EventScheduler scheduler) {
         switch (kind) {
             case ACTIVITY:
-                executeActivityAction(action, scheduler);
+                executeActivityAction(scheduler);
                 break;
 
             case ANIMATION:
@@ -47,43 +47,43 @@ public final class Action
     }
 
     public void executeActivityAction(
-            Action action, EventScheduler scheduler)
+            EventScheduler scheduler)
     {
-        switch (action.entity.kind) {
+        switch (entity.kind) {
             case MINER_FULL:
-                Functions.executeMinerFullActivity(action.entity, action.world,
-                        action.imageStore, scheduler);
+                Entity.executeMinerFullActivity(entity, world,
+                        imageStore, scheduler);
                 break;
 
             case MINER_NOT_FULL:
-                Functions.executeMinerNotFullActivity(action.entity, action.world,
-                        action.imageStore, scheduler);
+                Entity.executeMinerNotFullActivity(entity, world,
+                        imageStore, scheduler);
                 break;
 
             case ORE:
-                Functions.executeOreActivity(action.entity, action.world,
-                        action.imageStore, scheduler);
+                Entity.executeOreActivity(entity, world,
+                        imageStore, scheduler);
                 break;
 
             case ORE_BLOB:
-                Functions.executeOreBlobActivity(action.entity, action.world,
-                        action.imageStore, scheduler);
+                Entity.executeOreBlobActivity(entity, world,
+                        imageStore, scheduler);
                 break;
 
             case QUAKE:
-                Functions.executeQuakeActivity(action.entity, action.world,
-                        action.imageStore, scheduler);
+                Entity.executeQuakeActivity(entity, world,
+                        imageStore, scheduler);
                 break;
 
             case VEIN:
-                Functions.executeVeinActivity(action.entity, action.world,
-                        action.imageStore, scheduler);
+                Entity.executeVeinActivity(entity, world,
+                        imageStore, scheduler);
                 break;
 
             default:
                 throw new UnsupportedOperationException(String.format(
                         "executeActivityAction not supported for %s",
-                        action.entity.kind));
+                        entity.kind));
         }
     }
 }

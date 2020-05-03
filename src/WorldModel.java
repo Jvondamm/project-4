@@ -20,157 +20,14 @@ public final class WorldModel
         }
     }
 
-    public static void load(
-            Scanner in, WorldModel world, ImageStore imageStore)
-    {
-        int lineNumber = 0;
-        while (in.hasNextLine()) {
-            try {
-                if (!processLine(in.nextLine(), world, imageStore)) {
-                    System.err.println(String.format("invalid entry on line %d",
-                                                     lineNumber));
-                }
-            }
-            catch (NumberFormatException e) {
-                System.err.println(
-                        String.format("invalid entry on line %d", lineNumber));
-            }
-            catch (IllegalArgumentException e) {
-                System.err.println(
-                        String.format("issue on line %d: %s", lineNumber,
-                                      e.getMessage()));
-            }
-            lineNumber++;
-        }
-    }
-
-    private static boolean processLine(
-            String line, WorldModel world, ImageStore imageStore)
-    {
-        String[] properties = line.split("\\s");
-        if (properties.length > 0) {
-            switch (properties[Functions.PROPERTY_KEY]) {
-                case Functions.BGND_KEY:
-                    return parseBackground(properties, world, imageStore);
-                case Functions.MINER_KEY:
-                    return parseMiner(properties, world, imageStore);
-                case Functions.OBSTACLE_KEY:
-                    return parseObstacle(properties, world, imageStore);
-                case Functions.ORE_KEY:
-                    return parseOre(properties, world, imageStore);
-                case Functions.SMITH_KEY:
-                    return parseSmith(properties, world, imageStore);
-                case Functions.VEIN_KEY:
-                    return parseVein(properties, world, imageStore);
-            }
-        }
-
-        return false;
-    }
-
-    private static boolean parseBackground(
-            String[] properties, WorldModel world, ImageStore imageStore)
-    {
-        if (properties.length == Functions.BGND_NUM_PROPERTIES) {
-            Point pt = new Point(Integer.parseInt(properties[Functions.BGND_COL]),
-                                 Integer.parseInt(properties[Functions.BGND_ROW]));
-            String id = properties[Functions.BGND_ID];
-            setBackground(world, pt,
-                          new Background(id, ImageStore.getImageList(imageStore, id)));
-        }
-
-        return properties.length == Functions.BGND_NUM_PROPERTIES;
-    }
-
-    private static boolean parseMiner(
-            String[] properties, WorldModel world, ImageStore imageStore)
-    {
-        if (properties.length == Functions.MINER_NUM_PROPERTIES) {
-            Point pt = new Point(Integer.parseInt(properties[Functions.MINER_COL]),
-                                 Integer.parseInt(properties[Functions.MINER_ROW]));
-            Entity entity = Entity.createMinerNotFull(properties[Functions.MINER_ID],
-                                               Integer.parseInt(
-                                                       properties[Functions.MINER_LIMIT]),
-                                               pt, Integer.parseInt(
-                            properties[Functions.MINER_ACTION_PERIOD]), Integer.parseInt(
-                            properties[Functions.MINER_ANIMATION_PERIOD]),
-                                               ImageStore.getImageList(imageStore,
-                                                            Functions.MINER_KEY));
-            tryAddEntity(world, entity);
-        }
-
-        return properties.length == Functions.MINER_NUM_PROPERTIES;
-    }
-
-    private static boolean parseObstacle(
-            String[] properties, WorldModel world, ImageStore imageStore)
-    {
-        if (properties.length == Functions.OBSTACLE_NUM_PROPERTIES) {
-            Point pt = new Point(Integer.parseInt(properties[Functions.OBSTACLE_COL]),
-                                 Integer.parseInt(properties[Functions.OBSTACLE_ROW]));
-            Entity entity = Entity.createObstacle(properties[Functions.OBSTACLE_ID], pt,
-                                           ImageStore.getImageList(imageStore,
-                                                        Functions.OBSTACLE_KEY));
-            tryAddEntity(world, entity);
-        }
-
-        return properties.length == Functions.OBSTACLE_NUM_PROPERTIES;
-    }
-
-    private static boolean parseOre(
-            String[] properties, WorldModel world, ImageStore imageStore)
-    {
-        if (properties.length == Functions.ORE_NUM_PROPERTIES) {
-            Point pt = new Point(Integer.parseInt(properties[Functions.ORE_COL]),
-                                 Integer.parseInt(properties[Functions.ORE_ROW]));
-            Entity entity = Entity.createOre(properties[Functions.ORE_ID], pt, Integer.parseInt(
-                    properties[Functions.ORE_ACTION_PERIOD]),
-                                      ImageStore.getImageList(imageStore, Functions.ORE_KEY));
-            tryAddEntity(world, entity);
-        }
-
-        return properties.length == Functions.ORE_NUM_PROPERTIES;
-    }
-
-    private static boolean parseSmith(
-            String[] properties, WorldModel world, ImageStore imageStore)
-    {
-        if (properties.length == Functions.SMITH_NUM_PROPERTIES) {
-            Point pt = new Point(Integer.parseInt(properties[Functions.SMITH_COL]),
-                                 Integer.parseInt(properties[Functions.SMITH_ROW]));
-            Entity entity = Entity.createBlacksmith(properties[Functions.SMITH_ID], pt,
-                                             ImageStore.getImageList(imageStore,
-                                                          Functions.SMITH_KEY));
-            tryAddEntity(world, entity);
-        }
-
-        return properties.length == Functions.SMITH_NUM_PROPERTIES;
-    }
-
-    private static boolean parseVein(
-            String[] properties, WorldModel world, ImageStore imageStore)
-    {
-        if (properties.length == Functions.VEIN_NUM_PROPERTIES) {
-            Point pt = new Point(Integer.parseInt(properties[Functions.VEIN_COL]),
-                                 Integer.parseInt(properties[Functions.VEIN_ROW]));
-            Entity entity = Entity.createVein(properties[Functions.VEIN_ID], pt,
-                                       Integer.parseInt(
-                                               properties[Functions.VEIN_ACTION_PERIOD]),
-                                       ImageStore.getImageList(imageStore, Functions.VEIN_KEY));
-            tryAddEntity(world, entity);
-        }
-
-        return properties.length == Functions.VEIN_NUM_PROPERTIES;
-    }
-
-    private static void tryAddEntity(WorldModel world, Entity entity) {
+    public static void tryAddEntity(WorldModel world, Entity entity) {
         if (isOccupied(world, entity.position)) {
             // arguably the wrong type of exception, but we are not
             // defining our own exceptions yet
             throw new IllegalArgumentException("position occupied");
         }
 
-        Event.addEntity(world, entity);
+        addEntity(world, entity);
     }
 
     public static boolean withinBounds(WorldModel world, Point pos) {
@@ -182,7 +39,7 @@ public final class WorldModel
         return withinBounds(world, pos) && getOccupancyCell(world, pos) != null;
     }
 
-    private static void setBackground(
+    public static void setBackground(
             WorldModel world, Point pos, Background background)
     {
         if (withinBounds(world, pos)) {
@@ -217,5 +74,16 @@ public final class WorldModel
             WorldModel world, Point pos, Background background)
     {
         world.background[pos.y][pos.x] = background;
+    }
+
+    /*
+           Assumes that there is no entity currently occupying the
+           intended destination cell.
+        */
+    public static void addEntity(WorldModel world, Entity entity) {
+        if (withinBounds(world, entity.position)) {
+            setOccupancyCell(world, entity.position, entity);
+            world.entities.add(entity);
+        }
     }
 }

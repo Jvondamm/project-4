@@ -55,7 +55,7 @@ public final class WorldView
 
             if (Viewport.contains(view.viewport, pos)) {
                 Point viewPoint = Viewport.worldToViewport(view.viewport, pos.x, pos.y);
-                view.screen.image(Functions.getCurrentImage(entity),
+                view.screen.image(Entity.getCurrentImage(entity),
                                   viewPoint.x * view.tileWidth,
                                   viewPoint.y * view.tileHeight);
             }
