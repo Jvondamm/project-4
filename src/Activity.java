@@ -1,6 +1,5 @@
 public class Activity implements Action
 {
-
     private Entity entity;
     private WorldModel world;
     private ImageStore imageStore;

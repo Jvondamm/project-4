@@ -14,7 +14,7 @@ public class Animation implements Action
         return new Animation(entity, repeatCount);
     }
 
-    public  void executeAction(EventScheduler scheduler)
+    public void executeAction(EventScheduler scheduler)
     {
         this.entity.nextImage();
 
@@ -23,5 +23,4 @@ public class Animation implements Action
             scheduler.scheduleEvent(this.entity, createAnimation(this.entity, Math.max(this.repeatCount - 1, 0) ), this.entity.getAnimationPeriod());
         }
     }
-
 }

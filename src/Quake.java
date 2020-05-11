@@ -13,7 +13,6 @@ public class Quake implements Scheduled
     private int animationPeriod;
     private String id;
 
-    //public static final String QUAKE_KEY = "quake";
     public static final String QUAKE_ID = "quake";
     public static final int QUAKE_ACTION_PERIOD = 1100;
     public static final int QUAKE_ANIMATION_PERIOD = 100;
