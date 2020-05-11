@@ -70,11 +70,11 @@ public final class VirtualWorld extends PApplet
     public void draw() {
         long time = System.currentTimeMillis();
         if (time >= nextTime) {
-            EventScheduler.updateOnTime(this.scheduler, time);
+            this.scheduler.updateOnTime(time);
             nextTime = time + TIMER_ACTION_PERIOD;
         }
 
-        WorldView.drawViewport(view);
+        this.view.drawViewport(view);
     }
 
     public void keyPressed() {
@@ -96,7 +96,7 @@ public final class VirtualWorld extends PApplet
                     dx = 1;
                     break;
             }
-            WorldView.shiftView(view, dx, dy);
+            this.view.shiftView(dx, dy);
         }
     }
 
@@ -144,7 +144,9 @@ public final class VirtualWorld extends PApplet
             WorldModel world, EventScheduler scheduler, ImageStore imageStore)
     {
         for (Entity entity : world.entities) {
-            Entity.scheduleActions(entity, scheduler, world, imageStore);
+            if (entity instanceof Scheduled) {
+                ((Scheduled)entity).scheduleActions(scheduler, world, imageStore);
+            }
         }
     }
 

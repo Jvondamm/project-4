@@ -16,41 +16,40 @@ public final class EventScheduler
         this.timeScale = timeScale;
     }
 
-    public static void scheduleEvent(
-            EventScheduler scheduler,
+    public void scheduleEvent(
             Entity entity,
             Action action,
             long afterPeriod)
     {
         long time = System.currentTimeMillis() + (long)(afterPeriod
-                * scheduler.timeScale);
+                * this.timeScale);
         Event event = new Event(action, time, entity);
 
-        scheduler.eventQueue.add(event);
+        this.eventQueue.add(event);
 
         // update list of pending events for the given entity
-        List<Event> pending = scheduler.pendingEvents.getOrDefault(entity,
+        List<Event> pending = this.pendingEvents.getOrDefault(entity,
                 new LinkedList<>());
         pending.add(event);
-        scheduler.pendingEvents.put(entity, pending);
+        this.pendingEvents.put(entity, pending);
     }
 
-    public static void unscheduleAllEvents(
-            EventScheduler scheduler, Entity entity)
+    public void unscheduleAllEvents(
+            Entity entity)
     {
-        List<Event> pending = scheduler.pendingEvents.remove(entity);
+        List<Event> pending = this.pendingEvents.remove(entity);
 
         if (pending != null) {
             for (Event event : pending) {
-                scheduler.eventQueue.remove(event);
+                this.eventQueue.remove(event);
             }
         }
     }
 
-    private static void removePendingEvent(
-            EventScheduler scheduler, Event event)
+    private void removePendingEvent(
+             Event event)
     {
-        List<Event> pending = scheduler.pendingEvents.get(event.entity);
+        List<Event> pending = this.pendingEvents.get(event.entity);
 
         if (pending != null) {
             pending.remove(event);
@@ -58,14 +57,14 @@ public final class EventScheduler
     }
 
 
-    public static void updateOnTime(EventScheduler scheduler, long time) {
-        while (!scheduler.eventQueue.isEmpty()
-                && scheduler.eventQueue.peek().time < time) {
-            Event next = scheduler.eventQueue.poll();
+    public void updateOnTime(long time) {
+        while (!this.eventQueue.isEmpty()
+                && this.eventQueue.peek().time < time) {
+            Event next = this.eventQueue.poll();
 
-            removePendingEvent(scheduler, next);
+            removePendingEvent(next);
 
-            next.action.executeAction(next.action, scheduler);
+            next.action.executeAction(this);
         }
     }
 }

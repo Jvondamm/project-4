@@ -1,5 +1,4 @@
 import java.util.*;
-
 import processing.core.PApplet;
 import processing.core.PImage;
 
@@ -18,17 +17,18 @@ public final class ImageStore
         return imageStore.images.getOrDefault(key, imageStore.defaultImages);
     }
 
-    public static Action createActivityAction(
+    public static Activity createActivityAction(
             Entity entity, WorldModel world, ImageStore imageStore)
     {
-        return new Action(ActionKind.ACTIVITY, entity, world, imageStore, 0);
+        return new Activity(entity, world, imageStore, 0);
+        // *NOTE* am not sure about the zero for the repeat count
     }
 
     public static Optional<PImage> getBackgroundImage(
             WorldModel world, Point pos)
     {
-        if (WorldModel.withinBounds(world, pos)) {
-            return Optional.of(Background.getCurrentImage(WorldModel.getBackgroundCell(world, pos)));
+        if (world.withinBounds(pos)) {
+            return Optional.of(Background.getCurrentImage(world.getBackgroundCell(pos)));
         }
         else {
             return Optional.empty();

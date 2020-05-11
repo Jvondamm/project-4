@@ -4,8 +4,8 @@ public final class WorldModel
 {
     public int numRows;
     public int numCols;
-    public Background background[][];
-    public Entity occupancy[][];
+    private Background background[][];
+    private Entity occupancy[][];
     public Set<Entity> entities;
 
     public WorldModel(int numRows, int numCols, Background defaultBackground) {
@@ -20,54 +20,54 @@ public final class WorldModel
         }
     }
 
-    public static void tryAddEntity(WorldModel world, Entity entity) {
-        if (isOccupied(world, entity.position)) {
+    public void tryAddEntity(Entity entity) {
+        if (isOccupied(entity.getPosition())) {
             // arguably the wrong type of exception, but we are not
             // defining our own exceptions yet
             throw new IllegalArgumentException("position occupied");
         }
 
-        addEntity(world, entity);
+        addEntity(entity);
     }
 
-    public static boolean withinBounds(WorldModel world, Point pos) {
-        return pos.y >= 0 && pos.y < world.numRows && pos.x >= 0
-                && pos.x < world.numCols;
+    public boolean withinBounds(Point pos) {
+        return pos.y >= 0 && pos.y < this.numRows && pos.x >= 0
+                && pos.x < this.numCols;
     }
 
-    public static boolean isOccupied(WorldModel world, Point pos) {
-        return withinBounds(world, pos) && getOccupancyCell(world, pos) != null;
+    public boolean isOccupied(Point pos) {
+        return withinBounds(pos) && getOccupancyCell(pos) != null;
     }
 
-    public static void setBackground(
+    public void setBackground(
             WorldModel world, Point pos, Background background)
     {
-        if (withinBounds(world, pos)) {
+        if (withinBounds(pos)) {
             setBackgroundCell(world, pos, background);
         }
     }
 
-    public static Optional<Entity> getOccupant(WorldModel world, Point pos) {
-        if (isOccupied(world, pos)) {
-            return Optional.of(getOccupancyCell(world, pos));
+    public Optional<Entity> getOccupant(Point pos) {
+        if (isOccupied(pos)) {
+            return Optional.of(getOccupancyCell(pos));
         }
         else {
             return Optional.empty();
         }
     }
 
-    public static Entity getOccupancyCell(WorldModel world, Point pos) {
-        return world.occupancy[pos.y][pos.x];
+    public Entity getOccupancyCell(Point pos) {
+        return occupancy[pos.y][pos.x];
     }
 
-    public static void setOccupancyCell(
-            WorldModel world, Point pos, Entity entity)
+    public void setOccupancyCell(
+            Point pos, Entity entity)
     {
-        world.occupancy[pos.y][pos.x] = entity;
+        occupancy[pos.y][pos.x] = entity;
     }
 
-    public static Background getBackgroundCell(WorldModel world, Point pos) {
-        return world.background[pos.y][pos.x];
+    public Background getBackgroundCell(Point pos) {
+        return background[pos.y][pos.x];
     }
 
     public static void setBackgroundCell(
@@ -80,10 +80,36 @@ public final class WorldModel
            Assumes that there is no entity currently occupying the
            intended destination cell.
         */
-    public static void addEntity(WorldModel world, Entity entity) {
-        if (withinBounds(world, entity.position)) {
-            setOccupancyCell(world, entity.position, entity);
-            world.entities.add(entity);
+    public void addEntity(Entity entity) {
+        if (withinBounds(entity.getPosition())) {
+            setOccupancyCell(entity.getPosition(), entity);
+            entities.add(entity);
         }
+    }
+
+    private void removeEntityAt(Point pos) {
+        if (withinBounds(pos) && getOccupancyCell(pos) != null) {
+            Entity entity = getOccupancyCell(pos);
+
+            /* This moves the entity just outside of the grid for
+             * debugging purposes. */
+            entity.setPosition(new Point(-1, -1));
+            entities.remove(entity);
+            setOccupancyCell(pos, null);
+        }
+    }
+
+    public void moveEntity(Entity entity, Point pos) {
+        Point oldPos = entity.getPosition();
+        if (withinBounds(pos) && !pos.equals(oldPos)) {
+            setOccupancyCell(oldPos, null);
+            removeEntityAt(pos);
+            setOccupancyCell(pos, entity);
+            entity.setPosition(pos);
+        }
+    }
+
+    public void removeEntity(Entity entity) {
+        removeEntityAt(entity.getPosition());
     }
 }

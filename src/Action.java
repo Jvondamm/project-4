@@ -1,10 +1,15 @@
+public interface Action
+{
+    void executeAction(EventScheduler scheduler);
+}
+/*
 public final class Action
 {
-    public ActionKind kind;
-    public Entity entity;
-    public WorldModel world;
-    public ImageStore imageStore;
-    public int repeatCount;
+    private ActionKind kind;
+    private Entity entity;
+    private WorldModel world;
+    private ImageStore imageStore;
+    private int repeatCount;
 
     public Action(
             ActionKind kind,
@@ -20,29 +25,29 @@ public final class Action
         this.repeatCount = repeatCount;
     }
 
-    public void executeAction(Action action, EventScheduler scheduler) {
-        switch (kind) {
+    public void executeAction(EventScheduler scheduler) {
+        switch (this.kind) {
             case ACTIVITY:
                 executeActivityAction(scheduler);
                 break;
 
             case ANIMATION:
-                executeAnimationAction(action, scheduler);
+                executeAnimationAction(scheduler);
                 break;
         }
     }
 
     public void executeAnimationAction(
-            Action action, EventScheduler scheduler)
+            EventScheduler scheduler)
     {
-        action.entity.nextImage();
+        this.entity.nextImage();
 
-        if (action.repeatCount != 1) {
-            EventScheduler.scheduleEvent(scheduler, action.entity,
-                    Entity.createAnimationAction(action.entity,
-                            Math.max(action.repeatCount - 1,
+        if (this.repeatCount != 1) {
+            scheduler.scheduleEvent(this.entity,
+                    Entity.createAnimationAction(this.entity,
+                            Math.max(this.repeatCount - 1,
                                     0)),
-                    action.entity.getAnimationPeriod());
+                    this.entity.getAnimationPeriod());
         }
     }
 
@@ -51,32 +56,32 @@ public final class Action
     {
         switch (entity.kind) {
             case MINER_FULL:
-                Entity.executeMinerFullActivity(entity, world,
+                this.entity.executeMinerFullActivity(world,
                         imageStore, scheduler);
                 break;
 
             case MINER_NOT_FULL:
-                Entity.executeMinerNotFullActivity(entity, world,
+                this.entity.executeMinerNotFullActivity(world,
                         imageStore, scheduler);
                 break;
 
             case ORE:
-                Entity.executeOreActivity(entity, world,
+                this.entity.executeOreActivity(world,
                         imageStore, scheduler);
                 break;
 
             case ORE_BLOB:
-                Entity.executeOreBlobActivity(entity, world,
+                this.entity.executeOreBlobActivity(world,
                         imageStore, scheduler);
                 break;
 
             case QUAKE:
-                Entity.executeQuakeActivity(entity, world,
+                this.entity.executeQuakeActivity(world,
                         imageStore, scheduler);
                 break;
 
             case VEIN:
-                Entity.executeVeinActivity(entity, world,
+                this.entity.executeVeinActivity(world,
                         imageStore, scheduler);
                 break;
 
@@ -87,3 +92,4 @@ public final class Action
         }
     }
 }
+*/

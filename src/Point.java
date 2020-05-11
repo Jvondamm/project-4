@@ -1,5 +1,3 @@
-import processing.core.PImage;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -23,10 +21,10 @@ public final class Point
         }
         else {
             Entity nearest = entities.get(0);
-            int nearestDistance = distanceSquared(nearest.position, pos);
+            int nearestDistance = distanceSquared(nearest.getPosition(), pos);
 
             for (Entity other : entities) {
-                int otherDistance = distanceSquared(other.position, pos);
+                int otherDistance = distanceSquared(other.getPosition(), pos);
 
                 if (otherDistance < nearestDistance) {
                     nearest = other;
@@ -46,11 +44,11 @@ public final class Point
     }
 
     public static Optional<Entity> findNearest(
-            WorldModel world, Point pos, EntityKind kind)
+            WorldModel world, Point pos, Class type)
     {
         List<Entity> ofType = new LinkedList<>();
         for (Entity entity : world.entities) {
-            if (entity.kind == kind) {
+            if (entity.getClass() == type ) {
                 ofType.add(entity);
             }
         }
@@ -83,7 +81,7 @@ public final class Point
         for (int dy = -ORE_REACH; dy <= ORE_REACH; dy++) {
             for (int dx = -ORE_REACH; dx <= ORE_REACH; dx++) {
                 Point newPt = new Point(x + dx, y + dy);
-                if (WorldModel.withinBounds(world, newPt) && !WorldModel.isOccupied(world, newPt)) {
+                if (world.withinBounds(newPt) && !world.isOccupied(newPt)) {
                     return Optional.of(newPt);
                 }
             }
