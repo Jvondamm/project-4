@@ -20,6 +20,50 @@ public final class WorldModel
         }
     }
 
+    public static Optional<Entity> nearestEntity(
+            List<Entity> entities, Point pos)
+    {
+        if (entities.isEmpty()) {
+            return Optional.empty();
+        }
+        else {
+            Entity nearest = entities.get(0);
+            int nearestDistance = distanceSquared(nearest.getPosition(), pos);
+
+            for (Entity other : entities) {
+                int otherDistance = distanceSquared(other.getPosition(), pos);
+
+                if (otherDistance < nearestDistance) {
+                    nearest = other;
+                    nearestDistance = otherDistance;
+                }
+            }
+
+            return Optional.of(nearest);
+        }
+    }
+
+    private static int distanceSquared(Point p1, Point p2) {
+        int deltaX = p1.x - p2.x;
+        int deltaY = p1.y - p2.y;
+
+        return deltaX * deltaX + deltaY * deltaY;
+    }
+
+    public static Optional<Entity> findNearest(
+            WorldModel world, Point pos, Class type)
+    {
+        List<Entity> ofType = new LinkedList<>();
+        for (Entity entity : world.entities) {
+            if (type.isInstance(entity)) {
+                ofType.add(entity);
+            }
+        }
+
+        return nearestEntity(ofType, pos);
+    }
+    //entity.getClass() == type
+
     public void tryAddEntity(Entity entity) {
         if (isOccupied(entity.getPosition())) {
             // arguably the wrong type of exception, but we are not

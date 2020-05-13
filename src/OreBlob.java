@@ -46,7 +46,7 @@ public class OreBlob implements Scheduled
             EventScheduler scheduler)
     {
         Optional<Entity> blobTarget =
-                Point.findNearest(world, this.position, Vein.class);
+                WorldModel.findNearest(world, this.position, Vein.class);
         long nextPeriod = this.actionPeriod;
 
         if (blobTarget.isPresent()) {

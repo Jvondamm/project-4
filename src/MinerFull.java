@@ -52,7 +52,7 @@ public class MinerFull implements Scheduled
             EventScheduler scheduler)
     {
         Optional<Entity> fullTarget =
-                Point.findNearest(world, this.position, Blacksmith.class);
+                WorldModel.findNearest(world, this.position, Blacksmith.class);
 
         if (fullTarget.isPresent() && this.moveTo(world,
                 fullTarget.get(), scheduler))

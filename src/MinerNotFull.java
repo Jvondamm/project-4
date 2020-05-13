@@ -51,7 +51,7 @@ public class MinerNotFull implements Scheduled
             EventScheduler scheduler)
     {
         Optional<Entity> notFullTarget =
-                Point.findNearest(world, this.position, Ore.class);
+                WorldModel.findNearest(world, this.position, Ore.class);
 
         if (!notFullTarget.isPresent() || !this.moveTo(world,
                 notFullTarget.get(),
