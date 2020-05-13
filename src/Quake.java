@@ -1,6 +1,5 @@
 import processing.core.PImage;
 import java.util.List;
-import java.util.Optional;
 
 public class Quake implements Scheduled
 {
@@ -25,6 +24,7 @@ public class Quake implements Scheduled
         this.id = id;
         this.position = position;
         this.images = images;
+        this.imageIndex = 0;
         this.resourceLimit = resourceLimit;
         this.resourceCount = resourceCount;
         this.actionPeriod = actionPeriod;
@@ -38,8 +38,7 @@ public class Quake implements Scheduled
     public void setPosition(Point p) { this.position = p; }
 
 
-    public static Quake createQuake(
-            Point position, List<PImage> images)
+    public static Quake createQuake(Point position, List<PImage> images)
     {
         return new Quake(QUAKE_ID, position, images, 0, 0,
                 QUAKE_ACTION_PERIOD, QUAKE_ANIMATION_PERIOD);
