@@ -2,7 +2,7 @@ import processing.core.PImage;
 import java.util.List;
 import java.util.Optional;
 
-public class OreBlob implements Scheduled
+public class OreBlob implements Moving
 {
 
     private Point position;
@@ -27,18 +27,17 @@ public class OreBlob implements Scheduled
         this.animationPeriod = animationPeriod;
     }
 
+    public PImage getCurrentImage()
+    {
+        return this.getImages().get((this).getImageIndex());
+
+    }
+
     public int getImageIndex() { return this.imageIndex; }
     public List<PImage> getImages() { return this.images; }
     public int getAnimationPeriod() { return this.animationPeriod; }
     public Point getPosition() { return this.position; }
     public void setPosition(Point p) { this.position = p; }
-
-    public static OreBlob createOreBlob(String id, Point position,
-                                        int actionPeriod, int animationPeriod, List<PImage> images)
-    {
-        return new OreBlob( id, position, images,
-                0, 0, actionPeriod, animationPeriod);
-    }
 
     public void executeActivity(
             WorldModel world,
@@ -53,12 +52,12 @@ public class OreBlob implements Scheduled
             Point tgtPos = blobTarget.get().getPosition();
 
             if (moveTo(world, blobTarget.get(), scheduler)) {
-                Entity quake = Quake.createQuake(tgtPos,
+                Quake quake = Factory.createQuake(tgtPos,
                         ImageStore.getImageList(imageStore, Functions.QUAKE_KEY));
 
                 world.addEntity(quake);
                 nextPeriod += this.actionPeriod;
-                scheduleActions(scheduler, world, imageStore);
+                quake.scheduleActions(scheduler, world, imageStore);
             }
         }
 

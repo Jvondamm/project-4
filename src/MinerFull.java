@@ -2,7 +2,7 @@ import processing.core.PImage;
 import java.util.List;
 import java.util.Optional;
 
-public class MinerFull implements Scheduled
+public class MinerFull implements Moving
 {
 
     private Point position;
@@ -27,24 +27,17 @@ public class MinerFull implements Scheduled
         this.animationPeriod = animationPeriod;
     }
 
+    public PImage getCurrentImage()
+    {
+        return this.getImages().get((this).getImageIndex());
+
+    }
+
     public int getImageIndex() { return this.imageIndex; }
     public List<PImage> getImages() { return this.images; }
     public int getAnimationPeriod() { return this.animationPeriod; }
     public Point getPosition() { return this.position; }
     public void setPosition(Point p) { this.position = p; }
-
-    public static MinerFull createMinerFull(
-            String id,
-            int resourceLimit,
-            Point position,
-            int actionPeriod,
-            int animationPeriod,
-            List<PImage> images)
-    {
-        return new MinerFull(id, position, images,
-                resourceLimit, resourceLimit, actionPeriod,
-                animationPeriod);
-    }
 
     public void executeActivity(
             WorldModel world,
@@ -71,7 +64,7 @@ public class MinerFull implements Scheduled
             EventScheduler scheduler,
             ImageStore imageStore)
     {
-        MinerNotFull miner = MinerNotFull.createMinerNotFull(id, resourceLimit,
+        MinerNotFull miner = Factory.createMinerNotFull(id, resourceLimit,
                 position, actionPeriod,
                 animationPeriod,
                 images);

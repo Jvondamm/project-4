@@ -12,6 +12,12 @@ public class Blacksmith implements Entity
     private int actionPeriod;
     private int animationPeriod;
 
+    public PImage getCurrentImage()
+    {
+        return this.getImages().get((this).getImageIndex());
+
+    }
+
     public Blacksmith(String id, Point position,
                       List<PImage> images, int resourceLimit, int resourceCount,
                       int actionPeriod, int animationPeriod)
@@ -28,19 +34,7 @@ public class Blacksmith implements Entity
 
     public int getImageIndex() { return this.imageIndex; }
     public List<PImage> getImages() { return this.images; }
-    public int getAnimationPeriod() { return this.animationPeriod; }
     public Point getPosition() { return this.position; }
     public void setPosition(Point p) { this.position = p; }
 
-    public static Blacksmith createBlacksmith(String id, Point position,
-                                          List<PImage> images)
-    {
-        return new Blacksmith( id, position, images,
-                0, 0, 0, 0);
-    }
-
-    public void nextImage()
-    {
-        imageIndex = (getImageIndex()+ 1) % getImages().size();
-    }
 }

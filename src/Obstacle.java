@@ -26,21 +26,14 @@ public class Obstacle implements Entity
         this.animationPeriod = animationPeriod;
     }
 
+    public PImage getCurrentImage()
+    {
+        return this.getImages().get((this).getImageIndex());
+
+    }
+
     public int getImageIndex() { return this.imageIndex; }
     public List<PImage> getImages() { return this.images; }
-    public int getAnimationPeriod() { return this.animationPeriod; }
     public Point getPosition() { return this.position; }
     public void setPosition(Point p) { this.position = p; }
-
-    public static Obstacle createObstacle(String id, Point position,
-                                          List<PImage> images)
-    {
-        return new Obstacle( id, position, images,
-                0, 0, 0, 0);
-    }
-
-    public void nextImage()
-    {
-        imageIndex = (getImageIndex()+ 1) % getImages().size();
-    }
 }

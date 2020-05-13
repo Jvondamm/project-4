@@ -33,15 +33,13 @@ public class Vein implements Scheduled
 
     public int getImageIndex() { return this.imageIndex; }
     public List<PImage> getImages() { return this.images; }
-    public int getAnimationPeriod() { return this.animationPeriod; }
     public Point getPosition() { return this.position; }
     public void setPosition(Point p) { this.position = p; }
 
-    public static Vein createVein(
-            String id, Point position, int actionPeriod, List<PImage> images)
+    public PImage getCurrentImage()
     {
-        return new Vein(id, position, images, 0, 0,
-                actionPeriod, 0);
+        return this.getImages().get((this).getImageIndex());
+
     }
 
     public void executeActivity(
@@ -52,7 +50,7 @@ public class Vein implements Scheduled
         Optional<Point> openPt = this.position.findOpenAround(world);
 
         if (openPt.isPresent()) {
-            Ore ore = Ore.createOre(ORE_ID_PREFIX + this.id, openPt.get(),
+            Ore ore = Factory.createOre(ORE_ID_PREFIX + this.id, openPt.get(),
                     ORE_CORRUPT_MIN + Functions.rand.nextInt(
                             ORE_CORRUPT_MAX - ORE_CORRUPT_MIN),
                     ImageStore.getImageList(imageStore, ORE_KEY));
@@ -70,10 +68,5 @@ public class Vein implements Scheduled
         scheduler.scheduleEvent(this,
                 ImageStore.createActivityAction(this, world, imageStore),
                 this.actionPeriod);
-    }
-
-    public void nextImage()
-    {
-        imageIndex = (getImageIndex()+ 1) % getImages().size();
     }
 }

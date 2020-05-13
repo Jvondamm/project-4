@@ -31,18 +31,17 @@ public class Ore implements Scheduled
         this.animationPeriod = animationPeriod;
     }
 
+    public PImage getCurrentImage()
+    {
+        return this.getImages().get((this).getImageIndex());
+
+    }
+
     public int getImageIndex() { return this.imageIndex; }
     public List<PImage> getImages() { return this.images; }
     public int getAnimationPeriod() { return this.animationPeriod; }
     public Point getPosition() { return this.position; }
     public void setPosition(Point p) { this.position = p; }
-
-    public static Ore createOre(
-            String id, Point position, int actionPeriod, List<PImage> images)
-    {
-        return new Ore(id, position, images, 0, 0,
-                actionPeriod, 0);
-    }
 
     public void executeActivity(
             WorldModel world,
@@ -54,7 +53,7 @@ public class Ore implements Scheduled
         world.removeEntity(this);
         scheduler.unscheduleAllEvents( this);
 
-        OreBlob blob = OreBlob.createOreBlob(this.id + BLOB_ID_SUFFIX, pos,
+        OreBlob blob = Factory.createOreBlob(this.id + BLOB_ID_SUFFIX, pos,
                 this.actionPeriod / BLOB_PERIOD_SCALE,
                 BLOB_ANIMATION_MIN + Functions.rand.nextInt(
                         BLOB_ANIMATION_MAX
