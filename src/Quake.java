@@ -28,7 +28,7 @@ public class Quake extends Animate
         scheduler.scheduleEvent(this,
                 ImageStore.createActivityAction(this, world, imageStore),
                 this.actionPeriod);
-        scheduler.scheduleEvent( this, Animation.createAnimation(this,
+        scheduler.scheduleEvent( this, Factory.createAnimation(this,
                 QUAKE_ANIMATION_REPEAT_COUNT),
                 this.getAnimationPeriod());
     }

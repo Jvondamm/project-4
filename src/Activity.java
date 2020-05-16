@@ -9,11 +9,6 @@ public class Activity extends Action
         super(entity, world, imageStore, 0);
     }
 
-    public static Activity createActivity(Entity entity, WorldModel world, ImageStore imageStore)
-    {
-        return new Activity(entity, world, imageStore, 0);
-    }
-
     public void executeAction(EventScheduler scheduler) {
 
         if(entity instanceof MinerFull)

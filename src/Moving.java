@@ -34,7 +34,7 @@ abstract public class Moving extends Animate
                 ImageStore.createActivityAction(this, world, imageStore),
                 this.actionPeriod);
         scheduler.scheduleEvent(this,
-                Animation.createAnimation(this, 0),
+                Factory.createAnimation(this, 0),
                 this.getAnimationPeriod());
     }
 }

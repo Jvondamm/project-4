@@ -67,4 +67,9 @@ public class Factory {
         return new OreBlob( id, position, images,
                 0, 0, actionPeriod, animationPeriod);
     }
+
+    public static Animation createAnimation(Animate entity, int repeatCount)
+    {
+        return new Animation(entity, repeatCount);
+    }
 }
