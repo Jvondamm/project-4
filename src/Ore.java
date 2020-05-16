@@ -1,7 +1,7 @@
 import processing.core.PImage;
 import java.util.List;
 
-public class Ore implements Scheduled
+public class Ore extends Scheduled
 {
     public static final String BLOB_KEY = "blob";
     public static final String BLOB_ID_SUFFIX = " -- blob";
@@ -9,39 +9,12 @@ public class Ore implements Scheduled
     public static final int BLOB_ANIMATION_MIN = 50;
     public static final int BLOB_ANIMATION_MAX = 150;
 
-    private Point position;
-    private List<PImage> images;
-    private int imageIndex;
-    private int resourceLimit;
-    private int resourceCount;
-    private int actionPeriod;
-    private int animationPeriod;
-    private String id;
-
     public Ore(String id, Point position,
                List<PImage> images, int resourceLimit, int resourceCount,
-               int actionPeriod, int animationPeriod) {
-        this.id = id;
-        this.position = position;
-        this.images = images;
-        this.imageIndex = 0;
-        this.resourceLimit = resourceLimit;
-        this.resourceCount = resourceCount;
-        this.actionPeriod = actionPeriod;
-        this.animationPeriod = animationPeriod;
-    }
-
-    public PImage getCurrentImage()
+               int actionPeriod, int animationPeriod)
     {
-        return this.getImages().get((this).getImageIndex());
-
+        super(id, position, images, resourceLimit, resourceCount, actionPeriod, animationPeriod);
     }
-
-    public int getImageIndex() { return this.imageIndex; }
-    public List<PImage> getImages() { return this.images; }
-    public int getAnimationPeriod() { return this.animationPeriod; }
-    public Point getPosition() { return this.position; }
-    public void setPosition(Point p) { this.position = p; }
 
     public void executeActivity(
             WorldModel world,
@@ -62,17 +35,5 @@ public class Ore implements Scheduled
 
         world.addEntity(blob);
         blob.scheduleActions(scheduler, world, imageStore);
-    }
-
-    public void scheduleActions(EventScheduler scheduler, WorldModel world, ImageStore imageStore)
-    {
-        scheduler.scheduleEvent(this,
-                ImageStore.createActivityAction(this, world, imageStore),
-                this.actionPeriod);
-    }
-
-    public void nextImage()
-    {
-        imageIndex = (getImageIndex()+ 1) % getImages().size();
     }
 }

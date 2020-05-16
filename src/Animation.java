@@ -1,12 +1,9 @@
-public class Animation implements Action
+public class Animation extends Action
 {
-    private Entity entity;
-    private int repeatCount;
 
     public Animation(Animate entity, int repeatCount)
     {
-        this.entity = entity;
-        this.repeatCount = repeatCount;
+        super(entity, null, null, repeatCount);
     }
 
     public static Animation createAnimation(Animate entity, int repeatCount)

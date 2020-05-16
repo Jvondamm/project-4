@@ -2,42 +2,15 @@ import processing.core.PImage;
 import java.util.List;
 import java.util.Optional;
 
-public class MinerNotFull implements Moving
+public class MinerNotFull extends Moving
 {
-
-    private Point position;
-    private List<PImage> images;
-    private int imageIndex;
-    private int resourceLimit;
-    private int resourceCount;
-    private int actionPeriod;
-    private int animationPeriod;
-    private String id;
 
     public MinerNotFull(String id, Point position,
                         List<PImage> images, int resourceLimit, int resourceCount,
                         int actionPeriod, int animationPeriod)
     {
-        this.id = id;
-        this.position = position;
-        this.images = images;
-        this.resourceLimit = resourceLimit;
-        this.resourceCount = resourceCount;
-        this.actionPeriod = actionPeriod;
-        this.animationPeriod = animationPeriod;
+        super(id, position, images, resourceLimit, resourceCount, actionPeriod, animationPeriod);
     }
-
-    public PImage getCurrentImage()
-    {
-        return this.getImages().get((this).getImageIndex());
-
-    }
-
-    public int getImageIndex() { return this.imageIndex; }
-    public List<PImage> getImages() { return this.images; }
-    public int getAnimationPeriod() { return this.animationPeriod; }
-    public Point getPosition() { return this.position; }
-    public void setPosition(Point p) { this.position = p; }
 
     public void executeActivity(
             WorldModel world,
@@ -90,7 +63,6 @@ public class MinerNotFull implements Moving
             resourceCount += 1;
             world.removeEntity(target);
             scheduler.unscheduleAllEvents( target);
-
             return true;
         }
         else {
@@ -106,37 +78,5 @@ public class MinerNotFull implements Moving
             }
             return false;
         }
-    }
-
-    public Point nextPosition(WorldModel world, Point destPos)
-    {
-        int horiz = Integer.signum(destPos.x - position.x);
-        Point newPos = new Point(position.x + horiz, position.y);
-
-        if (horiz == 0 || world.isOccupied(newPos)) {
-            int vert = Integer.signum(destPos.y - position.y);
-            newPos = new Point(position.x, position.y + vert);
-
-            if (vert == 0 || world.isOccupied(newPos)) {
-                newPos = position;
-            }
-        }
-
-        return newPos;
-    }
-
-    public void scheduleActions(EventScheduler scheduler, WorldModel world, ImageStore imageStore)
-    {
-        scheduler.scheduleEvent(this,
-                ImageStore.createActivityAction(this, world, imageStore),
-                this.actionPeriod);
-        scheduler.scheduleEvent(this,
-                Animation.createAnimation(this, 0),
-                this.getAnimationPeriod());
-    }
-
-    public void nextImage()
-    {
-        imageIndex = (getImageIndex()+ 1) % getImages().size();
     }
 }

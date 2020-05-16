@@ -1,17 +1,8 @@
 import processing.core.PImage;
 import java.util.List;
 
-public class Quake implements Animate
+public class Quake extends Animate
 {
-    private Point position;
-    private List<PImage> images;
-    private int imageIndex;
-    private int resourceLimit;
-    private int resourceCount;
-    private int actionPeriod;
-    private int animationPeriod;
-    private String id;
-
     public static final String QUAKE_ID = "quake";
     public static final int QUAKE_ACTION_PERIOD = 1100;
     public static final int QUAKE_ANIMATION_PERIOD = 100;
@@ -21,28 +12,8 @@ public class Quake implements Animate
                      List<PImage> images, int resourceLimit, int resourceCount,
                      int actionPeriod, int animationPeriod)
     {
-        this.id = id;
-        this.position = position;
-        this.images = images;
-        this.imageIndex = 0;
-        this.resourceLimit = resourceLimit;
-        this.resourceCount = resourceCount;
-        this.actionPeriod = actionPeriod;
-        this.animationPeriod = animationPeriod;
+        super(id, position, images, resourceLimit, resourceCount, actionPeriod, animationPeriod);
     }
-
-    public int getImageIndex() { return this.imageIndex; }
-    public List<PImage> getImages() { return this.images; }
-    public int getAnimationPeriod() { return this.animationPeriod; }
-    public Point getPosition() { return this.position; }
-    public void setPosition(Point p) { this.position = p; }
-
-    public PImage getCurrentImage()
-    {
-        return this.getImages().get((this).getImageIndex());
-
-    }
-
     public void executeActivity(
             WorldModel world,
             ImageStore imageStore,
@@ -60,10 +31,5 @@ public class Quake implements Animate
         scheduler.scheduleEvent( this, Animation.createAnimation(this,
                 QUAKE_ANIMATION_REPEAT_COUNT),
                 this.getAnimationPeriod());
-    }
-
-    public void nextImage()
-    {
-        imageIndex = (getImageIndex()+ 1) % getImages().size();
     }
 }
