@@ -37,4 +37,6 @@ abstract public class Moving extends Animate
                 Factory.createAnimation(this, 0),
                 this.getAnimationPeriod());
     }
+
+    public abstract void executeActivity(WorldModel world, ImageStore imageStore, EventScheduler scheduler);
 }

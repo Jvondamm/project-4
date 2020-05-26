@@ -12,15 +12,12 @@ public final class Background
         this.id = id;
         this.images = images;
     }
-    public static PImage getCurrentImage(Object entity) {
-        if (entity instanceof Background) {
-            return ((Background)entity).images.get(
-                    ((Background)entity).imageIndex);
-        }
-        else {
-            throw new UnsupportedOperationException(
-                    String.format("getCurrentImage not supported for %s",
-                            entity));
-        }
+
+    public int getImageIndex() { return this.imageIndex; }
+    public List<PImage> getImages() { return this.images; }
+
+    public PImage getCurrentImage()
+    {
+        return (this.getImages()).get(this.getImageIndex());
     }
 }

@@ -33,7 +33,6 @@ abstract public class Entity
 
     public PImage getCurrentImage()
     {
-        return this.getImages().get((this).getImageIndex());
-
+        return (this.getImages()).get(this.getImageIndex());
     }
 }

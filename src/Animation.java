@@ -8,13 +8,10 @@ public class Animation extends Action
 
     public void executeAction(EventScheduler scheduler)
     {
-        if (entity instanceof Animate)
-        {
-            ((Animate)entity).nextImage();
-        }
+        ((Animate)entity).nextImage();
         if (this.repeatCount != 1)
         {
-            scheduler.scheduleEvent(this.entity, Factory.createAnimation((Animate)entity, Math.max(this.repeatCount - 1, 0) ), ((Animate)entity).getAnimationPeriod());
+            scheduler.scheduleEvent(entity, Factory.createAnimation((Animate)entity, Math.max(this.repeatCount - 1, 0) ), ((Animate)entity).getAnimationPeriod());
         }
     }
 }

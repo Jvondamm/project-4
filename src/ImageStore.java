@@ -21,14 +21,13 @@ public final class ImageStore
             Entity entity, WorldModel world, ImageStore imageStore)
     {
         return new Activity(entity, world, imageStore, 0);
-        // *NOTE* am not sure about the zero for the repeat count
     }
 
     public static Optional<PImage> getBackgroundImage(
             WorldModel world, Point pos)
     {
         if (world.withinBounds(pos)) {
-            return Optional.of(Background.getCurrentImage(world.getBackgroundCell(pos)));
+            return Optional.of(world.getBackgroundCell(pos).getCurrentImage());
         }
         else {
             return Optional.empty();
