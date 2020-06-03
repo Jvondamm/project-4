@@ -18,7 +18,7 @@ public class Factory {
     public static Vein createVein(
             String id, Point position, int actionPeriod, List<PImage> images)
     {
-        return new Vein(id, position, images, 0, 0,
+        return new Vein(id, position, images,
                 actionPeriod, 0);
     }
 
@@ -26,7 +26,7 @@ public class Factory {
                                           List<PImage> images)
     {
         return new Blacksmith( id, position, images,
-                0, 0, 0, 0);
+                0, 0);
     }
 
     public static MinerNotFull createMinerNotFull(
@@ -41,31 +41,46 @@ public class Factory {
                 resourceLimit, 0, actionPeriod, animationPeriod);
     }
 
+    public static Wyvern createWyvern(
+            String id,
+            Point position,
+            int actionPeriod,
+            int animationPeriod,
+            List<PImage> images)
+    {
+        return new Wyvern(id, position, images, actionPeriod, animationPeriod);
+    }
+
     public static Obstacle createObstacle(String id, Point position,
                                           List<PImage> images)
     {
         return new Obstacle( id, position, images,
-                0, 0, 0, 0);
+                 0, 0);
     }
 
     public static Ore createOre(
             String id, Point position, int actionPeriod, List<PImage> images)
     {
-        return new Ore(id, position, images, 0, 0,
+        return new Ore(id, position, images,
                 actionPeriod, 0);
     }
 
     public static Quake createQuake(Point position, List<PImage> images)
     {
-        return new Quake(Quake.QUAKE_ID, position, images, 0, 0,
+        return new Quake(Quake.QUAKE_ID, position, images,
                 Quake.QUAKE_ACTION_PERIOD, Quake.QUAKE_ANIMATION_PERIOD);
+    }
+
+    public static Freeze createFreeze(Point position, List<PImage> images)
+    {
+        return new Freeze(Freeze.FREEZE_ID, position, images,
+                Freeze.FREEZE_ACTION_PERIOD, Freeze.FREEZE_ANIMATION_PERIOD);
     }
 
     public static OreBlob createOreBlob(String id, Point position,
                                         int actionPeriod, int animationPeriod, List<PImage> images)
     {
-        return new OreBlob( id, position, images,
-                0, 0, actionPeriod, animationPeriod);
+        return new OreBlob( id, position, images, actionPeriod, animationPeriod);
     }
 
     public static Animation createAnimation(Animate entity, int repeatCount)

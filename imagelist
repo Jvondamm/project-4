@@ -29,3 +29,21 @@ rocks images/rock.bmp
 dirt images/dirt.bmp
 vein images/vein.bmp
 background_default images/none.bmp
+
+freeze images/freeze1.bmp 255 255 255 0
+freeze images/freeze2.bmp 255 255 255 0
+freeze images/freeze3.bmp 255 255 255 0
+freeze images/freeze4.bmp 255 255 255 0
+
+wyvern images/wyvern1.bmp 255 255 255 0
+wyvern images/wyvern2.bmp 255 255 255 0
+wyvern images/wyvern3.bmp 255 255 255 0
+wyvern images/wyvern4.bmp 255 255 255 0
+wyvern images/wyvern5.bmp 255 255 255 0
+wyvern images/wyvern6.bmp 255 255 255 0
+wyvern images/wyvern7.bmp 255 255 255 0
+wyvern images/wyvern8.bmp 255 255 255 0
+
+dark images/dark.bmp
+
+

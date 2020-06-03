@@ -1,6 +1,8 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.util.Scanner;
+import java.util.*;
 
 import processing.core.*;
 
@@ -12,6 +14,7 @@ public final class VirtualWorld extends PApplet
     public static final int VIEW_HEIGHT = 480;
     public static final int TILE_WIDTH = 32;
     public static final int TILE_HEIGHT = 32;
+    public static final int TILE_SIZE = 32;  // ADDED STUFF
     public static final int WORLD_WIDTH_SCALE = 2;
     public static final int WORLD_HEIGHT_SCALE = 2;
 
@@ -33,6 +36,12 @@ public final class VirtualWorld extends PApplet
     public static final double FASTER_SCALE = 0.25;
     public static final double FASTEST_SCALE = 0.10;
 
+    public static final String WYVERN_KEY = "wyvern";
+    public static final int WYVERN_ACTION_PERIOD = 5;
+    public static final int WYVERN_PERIOD_SCALE = 4;
+    public static final int WYVERN_ANIMATION_MIN = 100;
+    public static final int WYVERN_ANIMATION_MAX = 150;
+
     public static double timeScale = 1.0;
 
     public ImageStore imageStore;
@@ -41,6 +50,9 @@ public final class VirtualWorld extends PApplet
     public EventScheduler scheduler;
 
     public long nextTime;
+
+    public int ex = 0;
+    public int why = 0;
 
     public void settings() {
         size(VIEW_WIDTH, VIEW_HEIGHT);
@@ -96,13 +108,15 @@ public final class VirtualWorld extends PApplet
                     dx = 1;
                     break;
             }
+            why += dy;
+            ex += dx;
             this.view.shiftView(dx, dy);
         }
     }
 
     public static Background createDefaultBackground(ImageStore imageStore) {
         return new Background(DEFAULT_IMAGE_NAME,
-                              ImageStore.getImageList(imageStore,
+                              imageStore.getImageList(imageStore,
                                                      DEFAULT_IMAGE_NAME));
     }
 
@@ -169,5 +183,43 @@ public final class VirtualWorld extends PApplet
     public static void main(String[] args) {
         parseCommandLine(args);
         PApplet.main(VirtualWorld.class);
+    }
+
+    public void mousePressed() {
+        Point pressed = mouseToPoint(mouseX, mouseY);
+        List<PImage> two = imageStore.getImages().get("dark");
+        ImageStore a = new ImageStore(two.get(0));
+        Background one = new Background("none", a.getImageList(a,"three"));
+
+        Wyvern wyvern = Factory.createWyvern(WYVERN_KEY, pressed,
+                WYVERN_ACTION_PERIOD / WYVERN_PERIOD_SCALE,
+                WYVERN_ANIMATION_MIN + Functions.rand.nextInt(
+                        WYVERN_ANIMATION_MAX
+                                - WYVERN_ANIMATION_MIN),
+                imageStore.getImageList(imageStore, "wyvern"));
+
+        world.addEntity(wyvern);
+        wyvern.scheduleActions(scheduler, world, imageStore);
+
+        pressed.setX(pressed.getX() - 1 + ex);
+        pressed.setY(pressed.getY() + 1 + why);
+
+        for(int i = 0; i < 3; i++) {
+            if (i != 0) {
+                pressed = new Point(pressed.getX() - 3, pressed.getY() - 1);
+            }
+            for(int j = 0; j < 3; j++) {
+                if (world.withinBounds(pressed)) {
+                    world.setBackgroundCell(pressed, one);
+                }
+                pressed = new Point(pressed.getX() + 1, pressed.getY());
+            }
+        }
+
+
+    }
+
+    private Point mouseToPoint(int x, int y) {
+        return new Point(x/TILE_SIZE, y/TILE_SIZE);
     }
 }

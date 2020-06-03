@@ -13,7 +13,9 @@ public final class ImageStore
         defaultImages.add(defaultImage);
     }
 
-    public static List<PImage> getImageList(ImageStore imageStore, String key) {
+    public Map<String, List<PImage>> getImages(){return images;}
+
+    public List<PImage> getImageList(ImageStore imageStore, String key) {
         return imageStore.images.getOrDefault(key, imageStore.defaultImages);
     }
 

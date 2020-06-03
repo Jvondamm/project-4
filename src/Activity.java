@@ -37,9 +37,19 @@ public class Activity extends Action
             ((Quake)entity).executeActivity(this.world,
                     this.imageStore, scheduler);
         }
+        if(entity instanceof Freeze)
+        {
+            ((Freeze)entity).executeActivity(this.world,
+                    this.imageStore, scheduler);
+        }
         if(entity instanceof Vein)
         {
             ((Vein)entity).executeActivity(this.world,
+                    this.imageStore, scheduler);
+        }
+        if(entity instanceof Wyvern)
+        {
+            ((Wyvern)entity).executeActivity(this.world,
                     this.imageStore, scheduler);
         }
     }

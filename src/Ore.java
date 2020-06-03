@@ -10,10 +10,10 @@ public class Ore extends Scheduled
     public static final int BLOB_ANIMATION_MAX = 150;
 
     public Ore(String id, Point position,
-               List<PImage> images, int resourceLimit, int resourceCount,
+               List<PImage> images,
                int actionPeriod, int animationPeriod)
     {
-        super(id, position, images, resourceLimit, resourceCount, actionPeriod, animationPeriod);
+        super(id, position, images, actionPeriod, animationPeriod);
     }
 
     public void executeActivity(
@@ -31,7 +31,7 @@ public class Ore extends Scheduled
                 BLOB_ANIMATION_MIN + Functions.rand.nextInt(
                         BLOB_ANIMATION_MAX
                                 - BLOB_ANIMATION_MIN),
-                ImageStore.getImageList(imageStore, BLOB_KEY));
+                imageStore.getImageList(imageStore, BLOB_KEY));
 
         world.addEntity(blob);
         blob.scheduleActions(scheduler, world, imageStore);

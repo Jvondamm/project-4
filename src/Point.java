@@ -1,17 +1,21 @@
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
 
 public final class Point
 {
-    public final int x;
-    public final int y;
+    private int x;
+    private int y;
     private static final int ORE_REACH = 1;
 
     public Point(int x, int y) {
         this.x = x;
         this.y = y;
     }
+
+    public int getX() { return this.x; }
+    public int getY() { return this.y; }
+
+    public void setX(int input) { this.x = input; }
+    public void setY(int input) { this.y = input; }
 
     public String toString() {
         return "(" + x + "," + y + ")";

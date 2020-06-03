@@ -1,0 +1,12 @@
+1. why does the wyvern intially spwn in the corner
+2. why is soo fastt
+3. UML????
+
+1. Triggered by mouseclick.
+2. A 3x3 portal should cover the area of the mouseclick and spawn a wyvern, which will find the nearest blacksmith and burn it up, burning itself up in the process.
+3. The blacksmith will unschedule itself when it combusts.
+4. The wyvern will spawn upon mouseclick in the portal and find the nearest blacksmith and self destruct. The freeze will play its animation over the blacksmith.
+5. (if applicable) the names of each partner and what each partner was responsible for
+
+Reed - portal, wyvern, freeze
+Josh - pixel stuff, wyvern, freeze

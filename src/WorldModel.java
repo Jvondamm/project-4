@@ -44,8 +44,8 @@ public final class WorldModel
     }
 
     private static int distanceSquared(Point p1, Point p2) {
-        int deltaX = p1.x - p2.x;
-        int deltaY = p1.y - p2.y;
+        int deltaX = p1.getX() - p2.getX();
+        int deltaY = p1.getY() - p2.getY();
 
         return deltaX * deltaX + deltaY * deltaY;
     }
@@ -75,8 +75,8 @@ public final class WorldModel
     }
 
     public boolean withinBounds(Point pos) {
-        return pos.y >= 0 && pos.y < this.numRows && pos.x >= 0
-                && pos.x < this.numCols;
+        return pos.getY() >= 0 && pos.getY() < this.numRows && pos.getX() >= 0
+                && pos.getX() < this.numCols;
     }
 
     public boolean isOccupied(Point pos) {
@@ -84,10 +84,10 @@ public final class WorldModel
     }
 
     public void setBackground(
-            WorldModel world, Point pos, Background background)
+            Point pos, Background background)
     {
         if (withinBounds(pos)) {
-            setBackgroundCell(world, pos, background);
+            setBackgroundCell(pos, background);
         }
     }
 
@@ -101,23 +101,23 @@ public final class WorldModel
     }
 
     public Entity getOccupancyCell(Point pos) {
-        return occupancy[pos.y][pos.x];
+        return occupancy[pos.getY()][pos.getX()];
     }
 
     public void setOccupancyCell(
             Point pos, Entity entity)
     {
-        occupancy[pos.y][pos.x] = entity;
+        occupancy[pos.getY()][pos.getX()] = entity;
     }
 
     public Background getBackgroundCell(Point pos) {
-        return background[pos.y][pos.x];
+        return background[pos.getY()][pos.getX()];
     }
 
-    public static void setBackgroundCell(
-            WorldModel world, Point pos, Background background)
+    public void setBackgroundCell(
+            Point pos, Background background)
     {
-        world.background[pos.y][pos.x] = background;
+        this.background[pos.getY()][pos.getX()] = background;
     }
 
     /*

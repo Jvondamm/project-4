@@ -1,12 +1,14 @@
 import processing.core.PImage;
+
 import java.util.List;
 import java.util.Optional;
 
-public class OreBlob extends Moving
+public class Wyvern extends Moving
 {
-    public OreBlob(String id, Point position,
-                   List<PImage> images,
-                   int actionPeriod, int animationPeriod)
+
+    public Wyvern(String id, Point position,
+                  List<PImage> images,
+                  int actionPeriod, int animationPeriod)
     {
         super(id, position, images, actionPeriod, animationPeriod);
     }
@@ -16,20 +18,24 @@ public class OreBlob extends Moving
             ImageStore imageStore,
             EventScheduler scheduler)
     {
-        Optional<Entity> blobTarget =
-                WorldModel.findNearest(world, this.position, Vein.class);
+        Optional<Entity> blacksmithTarget =
+                WorldModel.findNearest(world, this.position, Blacksmith.class);
         long nextPeriod = this.actionPeriod;
 
-        if (blobTarget.isPresent()) {
-            Point tgtPos = blobTarget.get().getPosition();
+        if (blacksmithTarget.isPresent()) {
+            Point tgtPos = blacksmithTarget.get().getPosition();
 
-            if (moveTo(world, blobTarget.get(), scheduler)) {
-                Quake quake = Factory.createQuake(tgtPos,
-                        imageStore.getImageList(imageStore, Functions.QUAKE_KEY));
+            if (moveTo(world, blacksmithTarget.get(), scheduler)) {
 
-                world.addEntity(quake);
+                Freeze freeze = Factory.createFreeze(tgtPos,
+                        imageStore.getImageList(imageStore, Functions.FREEZE_KEY));
+
+                world.addEntity(freeze);
                 nextPeriod += this.actionPeriod;
-                quake.scheduleActions(scheduler, world, imageStore);
+                freeze.scheduleActions(scheduler, world, imageStore);
+
+                world.removeEntity(this);
+                scheduler.unscheduleAllEvents( this);
             }
         }
 
@@ -38,12 +44,13 @@ public class OreBlob extends Moving
                 nextPeriod);
     }
 
+
     public boolean moveTo(
             WorldModel world,
             Entity target,
             EventScheduler scheduler)
     {
-        if (Point.adjacent(this.position, target.getPosition())) {
+        if (Point.adjacent(position, target.getPosition())) {
             world.removeEntity(target);
             scheduler.unscheduleAllEvents(target);
             return true;
@@ -51,7 +58,7 @@ public class OreBlob extends Moving
         else {
             Point nextPos = nextPosition(world, target.getPosition());
 
-            if (!this.position.equals(nextPos)) {
+            if (!position.equals(nextPos)) {
                 Optional<Entity> occupant = world.getOccupant(nextPos);
                 if (occupant.isPresent()) {
                     scheduler.unscheduleAllEvents(occupant.get());
@@ -71,14 +78,14 @@ public class OreBlob extends Moving
         Optional<Entity> occupant = world.getOccupant(newPos);
 
         if (horiz == 0 || (occupant.isPresent() && !(occupant.get().getClass()
-                == Ore.class)))
+                == Blacksmith.class)))
         {
             int vert = Integer.signum(destPos.getY() - position.getY());
             newPos = new Point(position.getX(), position.getY() + vert);
             occupant = world.getOccupant(newPos);
 
             if (vert == 0 || (occupant.isPresent() && !(occupant.get().getClass()
-                    == Ore.class)))
+                    == Blacksmith.class)))
             {
                 newPos = position;
             }

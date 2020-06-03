@@ -5,11 +5,16 @@ import java.util.Optional;
 public class MinerNotFull extends Moving
 {
 
+    protected int resourceLimit;
+    protected int resourceCount;
+
     public MinerNotFull(String id, Point position,
                         List<PImage> images, int resourceLimit, int resourceCount,
                         int actionPeriod, int animationPeriod)
     {
-        super(id, position, images, resourceLimit, resourceCount, actionPeriod, animationPeriod);
+        super(id, position, images, actionPeriod, animationPeriod);
+        this.resourceLimit = resourceLimit;
+        this.resourceCount = resourceCount;
     }
 
     public void executeActivity(
